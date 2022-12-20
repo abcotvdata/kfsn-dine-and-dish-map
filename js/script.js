@@ -8,7 +8,6 @@ $(document).ready(function(){ // begin document.ready block
 
 	//jquery code here
 
-
 	if ($(window).width() >= 600) {
 	   // alert('Greater than 600');
 
@@ -17,7 +16,7 @@ $(document).ready(function(){ // begin document.ready block
 	    bounds = L.latLngBounds(southWest, northEast);
 
 
-		var map = L.map('map', {zoom: 9, center: new L.latLng([36.8,-120.1])}).setMaxBounds(bounds);
+		var map = L.map('map', {zoom: 8, center: new L.latLng([37.2,-120.1])}).setMaxBounds(bounds);
 		// var pane = map.createPane('fixedbg', document.getElementById('map'));
 		var pane = map.createPane('fixed', document.getElementById('map'));
 		var pane = map.createPane('bgfixed', document.getElementById('map'));
@@ -89,6 +88,26 @@ $(document).ready(function(){ // begin document.ready block
 		// taco locations layer
 		$.getJSON("dd_data_locations.geojson",function(data){
 
+			var items = data;
+
+				items = data.features.filter(function(obj) {
+				// return the filtered value
+				return obj.properties.location_notes === "food truck";
+				});
+
+				var items_length = items.length
+
+				// console.log(items)
+
+		        for (let i = 0; i < items.length; i++) {
+		        	console.log(items[i].properties)
+
+		        	$(".foodtrucklist").append('<div class="textbox"><div class="title"><h3>'+items[i].properties.name+'</h3></div><div class="text"><p><a href="'+items[i].properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+items[i].properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+items[i].properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+items[i].properties.video+'"></iframe></div>')
+				} 
+
+	          
+
+
 	    	var layerGroup = L.geoJSON(data, {
 
 	    		pointToLayer: function(feature,latlng){
@@ -102,13 +121,146 @@ $(document).ready(function(){ // begin document.ready block
 	        	},
 				onEachFeature: function (feature, layer) {
 
-					var popup = L.popup({
-				  	pane: 'fixed',
-				  	className: 'popup-fixed',
-				  	autoPan: false,
-					}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p>' + feature.properties.location + '<br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+					//no website, only facebook and instagram
+					if ((feature.properties.website == "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram != "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a> &#9679 </span><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//no facebook, only website and instagram
+					} else if ((feature.properties.website != "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram != "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//no instgram, only website and facebook
+					} else if ((feature.properties.website != "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram == "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//only instgram
+					} else if ((feature.properties.website == "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram != "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//only website
+					} else if ((feature.properties.website != "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram == "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//only facebook
+					} else if ((feature.properties.website == "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram == "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//nothing
+					} else if ((feature.properties.website == "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram == "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//everything
+					} else if ((feature.properties.website != "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram != "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span> &#9679 <span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+
+					}
+
+					if (feature.properties.location_notes == "multiple locations") {
+
+						//no website, only facebook and instagram
+						if ((feature.properties.website == "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram != "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '*</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a> &#9679 </span><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//no facebook, only website and instagram
+						} else if ((feature.properties.website != "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram != "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//no instgram, only website and facebook
+						} else if ((feature.properties.website != "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram == "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//only instgram
+						} else if ((feature.properties.website == "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram != "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//only website
+						} else if ((feature.properties.website != "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram == "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//only facebook
+						} else if ((feature.properties.website == "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram == "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//nothing
+						} else if ((feature.properties.website == "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram == "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//everything
+						} else if ((feature.properties.website != "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram != "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span> &#9679 <span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+
+						}
 
 
+
+
+					}
 				  	
 
 				    layer.bindPopup(popup);
@@ -127,15 +279,15 @@ $(document).ready(function(){ // begin document.ready block
 				circleLocation: false,
 				marker: false,
 				collapsed: false,
-				textPlaceholder: "Search for a restaurant",
+				textPlaceholder: "Search the map",
 				zoom: 13	
 			});
 
 			search.on('search:locationfound', function(e) {
 				var clicked_icon = e.latlng.layer._icon
-				console.log(clicked_icon)
+				// console.log(clicked_icon)
 
-				console.log(e.layer)
+				// console.log(e.layer)
 
 				$(clicked_icon).attr("src", "img/icon-hilite-01.png").css({"z-index": "1000"}).addClass("selected-icon")
 				$(clicked_icon).siblings().attr("src", "img/icon-w-01.png").removeClass("selected-icon")
@@ -147,6 +299,8 @@ $(document).ready(function(){ // begin document.ready block
 			});
 			
 			map.addControl( search );  //inizialize search control
+
+			// search
 
 
 			$(".leaflet-marker-icon").on("click", function(e){
@@ -180,7 +334,7 @@ $(document).ready(function(){ // begin document.ready block
 	    bounds = L.latLngBounds(southWest, northEast);
 
 
-		var map = L.map('map', {minZoom: 8}).setView([36.4,-119.76], 8).setMaxBounds(bounds);
+		var map = L.map('map', {minZoom: 8}).setView([37,-119.76], 8).setMaxBounds(bounds);
 		// var pane = map.createPane('fixedbg', document.getElementById('map'));
 		var pane = map.createPane('fixed', document.getElementById('map'));
 		var pane = map.createPane('bgfixed', document.getElementById('map'));
@@ -252,6 +406,26 @@ $(document).ready(function(){ // begin document.ready block
 		// taco locations layer
 		$.getJSON("dd_data_locations.geojson",function(data){
 
+			var items = data;
+
+				items = data.features.filter(function(obj) {
+				// return the filtered value
+				return obj.properties.location_notes === "food truck";
+				});
+
+				var items_length = items.length
+
+				// console.log(items)
+
+		        for (let i = 0; i < items.length; i++) {
+		        	console.log(items[i].properties)
+
+		        	$(".foodtrucklist").append('<div class="textbox"><div class="title"><h3>'+items[i].properties.name+'</h3></div><div class="text"><p><a href="'+items[i].properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+items[i].properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+items[i].properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+items[i].properties.video+'"></iframe></div>')
+				} 
+
+	          
+
+
 	    	var layerGroup = L.geoJSON(data, {
 
 	    		pointToLayer: function(feature,latlng){
@@ -265,13 +439,146 @@ $(document).ready(function(){ // begin document.ready block
 	        	},
 				onEachFeature: function (feature, layer) {
 
-					var popup = L.popup({
-				  	pane: 'fixed',
-				  	className: 'popup-fixed',
-				  	autoPan: false,
-					}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p>' + feature.properties.location + '<br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+					//no website, only facebook and instagram
+					if ((feature.properties.website == "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram != "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a> &#9679 </span><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//no facebook, only website and instagram
+					} else if ((feature.properties.website != "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram != "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//no instgram, only website and facebook
+					} else if ((feature.properties.website != "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram == "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//only instgram
+					} else if ((feature.properties.website == "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram != "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//only website
+					} else if ((feature.properties.website != "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram == "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//only facebook
+					} else if ((feature.properties.website == "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram == "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//nothing
+					} else if ((feature.properties.website == "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram == "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+					//everything
+					} else if ((feature.properties.website != "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram != "N/A")) {
+						var popup = L.popup({
+						  	pane: 'fixed',
+						  	className: 'popup-fixed',
+						  	autoPan: false,
+						}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span> &#9679 <span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+							
+
+					}
+
+					if (feature.properties.location_notes == "multiple locations") {
+
+						//no website, only facebook and instagram
+						if ((feature.properties.website == "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram != "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '*</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a> &#9679 </span><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//no facebook, only website and instagram
+						} else if ((feature.properties.website != "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram != "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//no instgram, only website and facebook
+						} else if ((feature.properties.website != "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram == "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//only instgram
+						} else if ((feature.properties.website == "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram != "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//only website
+						} else if ((feature.properties.website != "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram == "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//only facebook
+						} else if ((feature.properties.website == "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram == "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//nothing
+						} else if ((feature.properties.website == "N/A") && (feature.properties.facebook == "N/A") && (feature.properties.instagram == "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+						//everything
+						} else if ((feature.properties.website != "N/A") && (feature.properties.facebook != "N/A") && (feature.properties.instagram != "N/A")) {
+							var popup = L.popup({
+							  	pane: 'fixed',
+							  	className: 'popup-fixed',
+							  	autoPan: false,
+							}).setContent('<div class="textbox"><div class="new-close-button"><img src="img/exit.png"></div><div class="title"><h3>'+feature.properties.name+'</h3></div><div class="text"><p><span class="address">' + feature.properties.location + '</span><br> <a href="'+feature.properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+feature.properties.website+'" target="_Blank">Website</a> &#9679 </span><span class="facebook"><a href="'+feature.properties.facebook+'" target="_Blank">Facebook</a></span> &#9679 <span class="instagram"><a href="'+feature.properties.instagram+'" target="_Blank">Instagram</a></span></p><i>Multiple locations</i></div></div><div class="video"><iframe scrolling="no" src="'+feature.properties.video+'"></iframe></div>');
+								
+
+						}
 
 
+
+
+					}
 				  	
 
 				    layer.bindPopup(popup);
@@ -290,7 +597,7 @@ $(document).ready(function(){ // begin document.ready block
 				circleLocation: false,
 				marker: false,
 				collapsed: false,
-				textPlaceholder: "Search for a restaurant",
+				textPlaceholder: "Search the map",
 				zoom: 13	
 			});
 
@@ -310,6 +617,9 @@ $(document).ready(function(){ // begin document.ready block
 			});
 			
 			map.addControl( search );  //inizialize search control
+
+
+			
 
 
 			$(".leaflet-marker-icon").on("click", function(e){
@@ -334,6 +644,16 @@ $(document).ready(function(){ // begin document.ready block
 	    });
 
 	}
+
+	$("#foodtrucks").click(function(){
+		console.log("CLICK!!!")
+		$('.foodtruck-outer').fadeIn()
+	});
+
+	$(".exit-food-truck").click(function(){
+		console.log("EXIT!!")
+		$('.foodtruck-outer').fadeOut()
+	})
 
 
 	

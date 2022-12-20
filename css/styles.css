@@ -107,9 +107,13 @@ body {
   top: 130px;
   left: 50%;
   margin: 10px 0px !important;
-  transform: translate(-50%, 0%);
+  transform: translate(-115%, 0%);
 }
 
+/*.search-cancel {
+  right: 204px !important;
+}
+*/
 .search-tooltip {
   background-color: grey !important;
   width: 100% !important;
@@ -131,6 +135,62 @@ body {
   z-index: -500;
 }*/
 
+  #foodtrucks {
+    color: rgba(8,48,130,1);
+    font-family: din-condensed, sans-serif;
+    font-weight: 500;
+    padding: 6.5px;
+    font-size: 15px;
+    top: 216px;
+    transform: translate(-5%, 0%);
+    cursor: pointer;
+    text-decoration: underline;
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 0px 0px 3px black;
+    position: fixed;
+    z-index: 10000;
+
+  }
+
+  .foodtruck-outer {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(33, 83, 90, 0.5);
+    position: fixed;
+    z-index: 8000;
+    top: 0px;
+    left: 0px;
+    display: none;
+  }
+
+
+  .foodtruck-popup {
+    max-width: 400px;
+    margin: auto;
+    position: relative;
+    /*background-color: black;*/
+    top: 10px;
+
+  }
+
+    .exit-food-truck {
+      width: 20px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 8000;
+      cursor: pointer;
+
+  }
+    .exit-food-truck img {
+      width: 100%;
+      height: auto;
+    }
+
+    .exit-food-truck:hover {
+      transform: scale(1.2);
+    }
 
 .leaflet-tile-pane {
   opacity: 0.55;
@@ -176,7 +236,7 @@ body {
   font-family: din-condensed, sans-serif;
   font-weight: 400;
   font-style: normal;
-  width: 500px;
+  width: 395px;
   height: 80vh !important;
   border-radius: 10px;
   /*background-color: white;*/
@@ -186,7 +246,7 @@ body {
   bottom: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  top: 29vh;
+  top: 38vh;
 
 }
   
@@ -219,11 +279,21 @@ body {
   position: relative;
 }
 
+
+
 .text {
-  font-size: 20px;
+  font-size: 18px;
   color: white;
   margin-left: 10px;
 } 
+
+.text i {
+  font-size: 10px;
+}
+
+.text p {
+  margin: 10px;
+}
 
 .textbox a {
   color: white;
@@ -238,7 +308,7 @@ body {
   .title h3 {
     padding: 0px;
     margin: 0px;
-    font-size: 2em;
+    font-size: 1.8em;
   }
 
 .video {
@@ -318,13 +388,13 @@ body {
 
 @media only screen and (max-width: 1000px) {
   .popup-fixed {
-    width: 400px;
+    width: 395px;
   }
 }
 
 @media only screen and (max-width: 800px) {
   .popup-fixed {
-    width: 350px;
+    width: 360px;
   }
 }
 
@@ -348,6 +418,10 @@ body {
     font-size: 0.9em;
   }
 
+  #foodtrucks {
+    top: 196px;
+  }
+
   .leaflet-control-search {
     top: 110px;
   }
@@ -362,7 +436,7 @@ body {
   }
 
   .popup-fixed {
-    top: 20px;
+    top: 120px;
     width: 100%;
   }
 
@@ -383,12 +457,22 @@ body {
     height: auto;
   }
 
+  .textbox {
+    padding: 5px;
+  }
+
+
   .title h3 {
     font-size: 1.4em;
   }
 
+
   .text {
     font-size: 15px;
+  }
+
+  .text p {
+    margin: 5px;
   }
 
   .footer {
@@ -414,6 +498,10 @@ body {
   .maptitle h3 {
     font-size: 0.8em;
   }
+
+}
+
+@media only screen and (max-width: 370px) {
 
 }
 
