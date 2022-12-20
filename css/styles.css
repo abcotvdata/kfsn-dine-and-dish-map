@@ -436,7 +436,7 @@ body {
   }
 
   .popup-fixed {
-    top: 120px;
+    top: 90px;
     width: 100%;
   }
 
@@ -446,10 +446,11 @@ body {
 
 
   .video {
-    width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
-    padding-bottom: 44%;
+    width: 66%;
+    margin-left: 17%;
+    margin-right: 17%;
+    padding-bottom: 36%;
+    margin-top: 1vh;
   }
 
   .nostory {
