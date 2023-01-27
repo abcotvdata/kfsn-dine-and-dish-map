@@ -279,7 +279,17 @@ body {
   position: relative;
 }
 
-
+.comingsoon {
+  text-transform: uppercase;
+  font-size: 2em;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  top: 20px;
+  color: rgb(244,160,45);
+  font-weight: bold;
+  height: 0px;
+}
 
 .text {
   font-size: 18px;
