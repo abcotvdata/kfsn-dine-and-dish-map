@@ -102,7 +102,7 @@ $(document).ready(function(){ // begin document.ready block
 		        for (let i = 0; i < items.length; i++) {
 		        	console.log(items[i].properties)
 
-		        	$(".foodtrucklist").append('<div class="textbox"><div class="title"><h3>'+items[i].properties.name+'</h3></div><div class="text"><p><a href="'+items[i].properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+items[i].properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+items[i].properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+items[i].properties.video+'"></iframe></div>')
+		        	$(".foodtrucklist").append('<div class="foodtruckitem"><div class="textbox"><div class="title"><h3>'+items[i].properties.name+'</h3></div><div class="text"><p><a href="'+items[i].properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+items[i].properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+items[i].properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+items[i].properties.video+'"></iframe></div></div>')
 				} 
 
 	          
@@ -495,12 +495,12 @@ $(document).ready(function(){ // begin document.ready block
 
 				var items_length = items.length
 
-				// console.log(items)
+				console.log(items)
 
 		        for (let i = 0; i < items.length; i++) {
 		        	console.log(items[i].properties)
 
-		        	$(".foodtrucklist").append('<div class="textbox"><div class="title"><h3>'+items[i].properties.name+'</h3></div><div class="text"><p><a href="'+items[i].properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+items[i].properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+items[i].properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+items[i].properties.video+'"></iframe></div>')
+		        	$(".foodtrucklist").append('<div class="foodtruckitem"><div class="textbox"><div class="title"><h3>'+items[i].properties.name+'</h3></div><div class="text"><p><a href="'+items[i].properties.story+'" target="_blank">Click here for the full story</a></p><p><span class="website"><a href="'+items[i].properties.website+'" target="_Blank">Website</a> &#9679 </span></span><span class="instagram"><a href="'+items[i].properties.instagram+'" target="_Blank">Instagram</a></span></p></div></div><div class="video"><iframe scrolling="no" src="'+items[i].properties.video+'"></iframe></div></div>')
 				} 
 
 	          

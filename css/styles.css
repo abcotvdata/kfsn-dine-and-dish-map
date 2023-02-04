@@ -162,6 +162,11 @@ body {
     top: 0px;
     left: 0px;
     display: none;
+    overflow: scroll;
+  }
+
+  .foodtrucklist {
+    margin-bottom: 50px;
   }
 
 
@@ -170,8 +175,15 @@ body {
     margin: auto;
     position: relative;
     /*background-color: black;*/
-    top: 10px;
 
+  }
+
+  .foodtruckitem {
+    margin-top: 65px;
+  }
+
+  .foodtruckitem .video {
+    position: relative;
   }
 
     .exit-food-truck {
