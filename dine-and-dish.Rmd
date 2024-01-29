@@ -1,0 +1,147 @@
+---
+output: 
+  html_document:
+    css: taco_tuesday_map.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
+
+library(tmaptools)
+library(RCurl)
+library(jsonlite)
+library(tidyverse)
+library(leaflet)
+library(janitor)
+library(stringr)
+library(htmlwidgets)
+library(htmltools)
+library(leaflet.extras)
+library(sf)
+library(geojsonsf)
+library(rgdal)
+library(tidygeocoder)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
+
+#geocodio api key: d176676bd69337ad69b339977a9317169ba8a39
+
+
+```
+
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
+
+#read in data
+
+dd_data <- read.csv("dine-and-dish-raw.csv") %>% 
+  janitor::clean_names()
+
+
+dd_data_locations <- dd_data %>%
+  geocode(location, method = 'geocodio', lat = lat , long = lon) 
+
+dd_data_locations <- dd_data_locations %>% 
+  mutate(lat = case_when(is.na(lat) == TRUE ~ 0,
+                         TRUE ~ lat)) %>% 
+  mutate(lon = case_when(is.na(lon) == TRUE ~ 0,
+                         TRUE ~ lon))
+
+```
+
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
+
+#geolocate
+
+#tt_data_locations <- tt_data %>% 
+#  mutate_geocode(full_address)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, include=FALSE}
+
+#export to geojson
+
+dd_data_locations_sf <- st_as_sf(dd_data_locations, coords = c("lon", "lat"), crs = "4326")
+
+st_write(dd_data_locations_sf, "dd_data_locations.geojson", append = FALSE)
+
+```
+
+```{r, echo=FALSE, warning=FALSE}
+
+#rand_lng <- function(n = 10) rnorm(n, -93.65, .01)
+#rand_lat <- function(n = 10) rnorm(n, 42.0285, .01)
+
+#random_data <- data.frame(
+#  lng = rand_lng(50),
+#  lat = rand_lat(50),
+#  radius = runif(50, 50, 150),
+#  circleId = paste0("circle #", 1:50),
+#  lineId = paste0("circle #", 1:50)
+#)
+
+# display circles (zIndex: 420) above the lines (zIndex: 410), even when added first
+#test_leaflet <- leaflet() %>%
+#  addTiles() %>%
+#  # move the center to Snedecor Hall
+#  setView(-93.65, 42.0285, zoom = 14) %>%
+#  addMapPane("ames_lines", zIndex = 410) %>% # shown below ames_circles
+#  addMapPane("ames_circles", zIndex = 420) %>% # shown above ames_lines
+  # points above polygons
+#  addCircles(
+#    data = random_data, ~lng, ~lat, radius = ~radius, popup = ~circleId,
+#    options = pathOptions(pane = "ames_circles")
+#  ) %>%
+  # lines in 'ames_lines' pane
+#  addPolylines(
+#    data = random_data, ~lng, ~lat, color = "#F00", weight = 20
+#  )
+
+#test_leaflet
+
+```
+
+```{r, echo=FALSE, warning=FALSE, out.width = '100%', out.height: '100%'}
+
+#make icons
+tacoIcons <- icons(
+  iconUrl = "fireorange.png",
+  iconWidth = 22, iconHeight = 22)
+
+#labels
+tacoLabel <- paste0(sep = "<br>",
+                   paste("<font size='5'><b>",tt_data_locations$headline,"</font size></b>"),
+                   paste("<font size='3'> By ",tt_data_locations$reporter_producer),
+                   paste("<iframe src=\"", tt_data_locations$link_to_video, "\"></iframe>"),
+                   paste("<font size='3'><a href=\"",tt_data_locations$link_to_full_story,"\" target=\"_blank\">Click here for the full story</a></font size>"))
+
+#make map
+
+taco_tuesday_map <- leaflet() %>% 
+  addProviderTiles(providers$Stamen.Toner, options = providerTileOptions(minZoom = 5)) %>%
+  addMapPane("fixed-popup", zIndex = 420) %>% 
+  addMarkers(data = tt_data_locations, 
+             lat = ~lat,
+             lng = ~lon,
+             icon = tacoIcons,
+             popup = tacoLabel, 
+             popupOptions = popupOptions(
+               autoPan = FALSE,
+               keepInView = TRUE,
+               zoomAnimation = FALSE,
+               className = "fixed-popup",
+               pane = "fixed-popup"))
+
+taco_tuesday_map
+
+```
+
